@@ -4,7 +4,7 @@ use App\Models\User;
 
 describe ('User tests', function(){
     test('register', function () {
-        $response = $this->post('/api/v1/register', [
+        $response = $this->post('/api/v1/auth/register', [
             'name' => 'Test User',
             'email' => 'test@testeds',
             'password' => 'password',
@@ -29,14 +29,14 @@ describe ('User tests', function(){
             'email' => 'test@testeds',
             'password' => bcrypt('password'),
         ]);
-        $response = $this->post('/api/v1/login', [
+        $response = $this->post('/api/v1/auth/login', [
             'email' => 'test@testeds',
             'password' => 'password',
         ]);
 
         $response->assertStatus(200)
             ->assertJson([
-                'message' => 'Login successful',
+                'message' => 'Login realizado com sucesso',
             ]);
     });
 
@@ -46,7 +46,7 @@ describe ('User tests', function(){
 
         $response = $this->withHeaders([
             'Authorization' => 'Bearer ' . $token,
-        ])->post('/api/v1/logout');
+        ])->post('/api/v1/auth/logout');
 
         $response->assertStatus(200)
             ->assertJson([
