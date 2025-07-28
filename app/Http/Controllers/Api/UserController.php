@@ -52,7 +52,7 @@ class UserController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Credenciais inválidas.',
-            ], Response::HTTP_UNAUTHORIZED);
+            ], 401);
         }
 
         $user = Auth::user();
