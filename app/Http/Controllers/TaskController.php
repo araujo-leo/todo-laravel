@@ -32,7 +32,7 @@ class TaskController extends Controller
     public function create(CreateTaskRequest $request){
         $validatedData = $request->validated();
 
-        try{
+        try {
             $task = Task::create([
                 'title' => $validatedData['title'],
                 'description' => $validatedData['description'] ?? null,
@@ -44,8 +44,8 @@ class TaskController extends Controller
             return response()->json([
                 'status' => true,
                 'message' => 'Task created successfully',
-            ],201);
-        }catch (\Exception $e) {
+            ], 201);
+        } catch (\Exception $e) {
             return response()->json([
                 'status' => false,
                 'message' => 'Failed to create task',
@@ -76,4 +76,22 @@ class TaskController extends Controller
             ],
         ], Response::HTTP_OK);
     }
+
+    public function destroy(Request $request, Task $task){
+        // Verifica se pertence ao usuário
+        if ($task->user_id !== auth()->id()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Unauthorized',
+            ], Response::HTTP_UNAUTHORIZED);
+        }
+
+        $task->delete();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Task deleted successfully',
+        ], Response::HTTP_OK);
+    }
+
 }

@@ -20,5 +20,6 @@ Route::prefix('v1')->group(function () {
         Route::post('/', [App\Http\Controllers\TaskController::class, 'create']);
         Route::get('/', [App\Http\Controllers\TaskController::class, 'index']);
         Route::get('/{task}', [App\Http\Controllers\TaskController::class, 'show']);
+        Route::delete('/{task}', [App\Http\Controllers\TaskController::class, 'destroy']);
     });
 });
