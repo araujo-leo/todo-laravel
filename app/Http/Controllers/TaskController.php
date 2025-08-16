@@ -55,4 +55,25 @@ class TaskController extends Controller
 
 
     }
+
+    public function show(Request $request, Task $task){
+        if ($task->user_id !== auth()->id()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Unauthorized',
+            ], Response::HTTP_UNAUTHORIZED);
+        }
+
+        return response()->json([
+            'status' => true,
+            'data' => [
+                'id' => $task->id,
+                'title' => $task->title,
+                'description' => $task->description,
+                'total_pomodoro' => $task->total_pomodoro,
+                'pomodoro_value' => $task->pomodoro_value,
+                'completed_pomodoro' => $task->completed_pomodoro,
+            ],
+        ], Response::HTTP_OK);
+    }
 }

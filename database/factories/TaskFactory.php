@@ -16,6 +16,10 @@ class TaskFactory extends Factory
             'title' => $this->faker->sentence(4),
             'description' => $this->faker->paragraph(),
             'user_id' => User::factory(),
+            'total_pomodoro' => $this->faker->numberBetween(1, 10),
+            'pomodoro_value' => $this->faker->numberBetween(1, 5),
+            'completed_pomodoro' => $this->faker->numberBetween(0, 10),
+            'status' => $this->faker->randomElement(['pending', 'in_progress', 'completed']),
         ];
     }
 }
