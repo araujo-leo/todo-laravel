@@ -15,15 +15,15 @@ class TaskController extends Controller
         $tasks = Task::where('user_id', auth()->id())->get();
 
         return response()->json([
-            'status' => true,
+            'success' => true,
             'data' => $tasks->map(function ($task) {
                 return [
                     'id' => $task->id,
                     'title' => $task->title,
                     'description' => $task->description,
-                    'total_pomodoro' => $task->total_pomodoro,
-                    'pomodoro_value' => $task->pomodoro_value,
-                    'completed_pomodoro' => $task->completed_pomodoro,
+                    'totalPomodori' => $task->totalPomodori,
+                    'pomodoroValue' => $task->pomodoroValue,
+                    'completedPomodori' => $task->completedPomodori,
                 ];
             }),
         ], RESPONSE::HTTP_OK);
@@ -43,12 +43,12 @@ class TaskController extends Controller
                 'completedPomodori' => $validatedData['completedPomodori'] ?? 0,
             ]);
             return response()->json([
-                'status' => true,
+                'success' => true,
                 'message' => 'Task created successfully',
             ], 201);
         } catch (\Exception $e) {
             return response()->json([
-                'status' => false,
+                'success' => false,
                 'message' => 'Failed to create task',
                 'error' => $e->getMessage(),
             ], 500);
@@ -57,40 +57,70 @@ class TaskController extends Controller
 
     }
 
-    public function show(Request $request, Task $task){
+    public function show(Request $request, $id)
+    {
+        $task = Task::find($id);
+
+        if (!$task) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Task not found',
+                'data' => null,
+                'errors' => ['Task with the given ID does not exist.'],
+            ], Response::HTTP_NOT_FOUND);
+        }
+
         if ($task->user_id !== auth()->id()) {
             return response()->json([
-                'status' => false,
+                'success' => false,
                 'message' => 'Unauthorized',
+                'data' => null,
+                'errors' => ['You do not have permission to view this task.'],
             ], Response::HTTP_UNAUTHORIZED);
         }
 
         return response()->json([
-            'status' => true,
+            'success' => true,
+            'message' => 'Task found',
             'data' => [
                 'id' => $task->id,
                 'title' => $task->title,
                 'description' => $task->description,
-                'total_pomodoro' => $task->total_pomodoro,
-                'pomodoro_value' => $task->pomodoro_value,
-                'completed_pomodoro' => $task->completed_pomodoro,
+                'totalPomodori' => $task->totalPomodori,
+                'pomodoroValue' => $task->pomodoroValue,
+                'completedPomodori' => $task->completedPomodori,
+                'status' => $task->status,
+                'taskDate' => $task->taskdate,
+                'dueDate' => $task->dueDate,
+                'assignedAt' => $task->assigned_at,
+                'completedAt' => $task->completed_at,
             ],
+            'errors' => [],
         ], Response::HTTP_OK);
     }
 
-    public function destroy(Request $request, Task $task){
-        // Verifica se pertence ao usuário
+    public function destroy(Request $request, $id){
+
+        $task = Task::find($id);
+
+        if (!$task) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Task not found',
+            ], Response::HTTP_NOT_FOUND);
+        }
+
         if ($task->user_id !== auth()->id()) {
             return response()->json([
-                'status' => false,
-                'message' => 'Unauthorized',
+                'success' => false,
+                'message' => 'Unauthenticated.',
             ], Response::HTTP_UNAUTHORIZED);
         }
 
         $task->delete();
 
         return response()->json([
-            'status' => true,
+            'success' => true,
             'message' => 'Task deleted successfully',
         ], Response::HTTP_OK);
     }
@@ -103,7 +133,7 @@ class TaskController extends Controller
         // Verifica se pertence ao usuário
         if ($task->user_id !== auth()->id()) {
             return response()->json([
-                'status' => false,
+                'success' => false,
                 'message' => 'Unauthorized',
             ], Response::HTTP_UNAUTHORIZED);
         }
@@ -112,19 +142,19 @@ class TaskController extends Controller
         $task->update($validatedData);
 
         return response()->json([
-            'status' => true,
+            'success' => true,
             'message' => 'Task updated successfully',
             'data' => [
                 'id' => $task->id,
                 'title' => $task->title,
                 'description' => $task->description,
                 'totalPomodori' => $task->total_pomodori,
-                'pomodoroValue' => $task->pomodoro_value,
+                'pomodoroValue' => $task->pomodoroValue,
                 'completedPomodori' => $task->completed_pomodori,
                 'status' => $task->status,
                 'taskdate' => $task->taskdate,
                 'dueDate' => $task->dueDate,
-                'completedAt' => $task->completed_pomodoro,
+                'completedAt' => $task->completedPomodori,
             ],
             'errrors' => $task->getErrors(),
         ], Response::HTTP_OK);
