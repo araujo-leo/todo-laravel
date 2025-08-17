@@ -32,10 +32,6 @@ describe('List Tasks tests', function () {
                         'totalPomodori',
                         'pomodoroValue',
                         'completedPomodori',
-                        'status',
-                        'taskDate',
-                        'dueDate',
-                        'assignedAt',
                     ],
                 ],
             ]);

@@ -57,26 +57,16 @@ class TaskController extends Controller
 
     }
 
-    public function show(Request $request, $id)
-    {
+    public function show(Request $request, $id){
         $task = Task::find($id);
 
-        if (!$task) {
+        if(!$task){
             return response()->json([
                 'success' => false,
                 'message' => 'Task not found',
                 'data' => null,
                 'errors' => ['Task with the given ID does not exist.'],
             ], Response::HTTP_NOT_FOUND);
-        }
-
-        if ($task->user_id !== auth()->id()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Unauthorized',
-                'data' => null,
-                'errors' => ['You do not have permission to view this task.'],
-            ], Response::HTTP_UNAUTHORIZED);
         }
 
         return response()->json([
@@ -90,7 +80,7 @@ class TaskController extends Controller
                 'pomodoroValue' => $task->pomodoroValue,
                 'completedPomodori' => $task->completedPomodori,
                 'status' => $task->status,
-                'taskDate' => $task->taskdate,
+                'taskDate' => $task->taskDate,
                 'dueDate' => $task->dueDate,
                 'assignedAt' => $task->assigned_at,
                 'completedAt' => $task->completed_at,
