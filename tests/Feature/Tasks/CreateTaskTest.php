@@ -10,37 +10,36 @@ describe('Create Task tests', function () {
 
         $response = $this->withHeaders([
             'Authorization' => 'Bearer ' . $token,
-        ])->post('/api/v1/auth/logout');
-
-
-        $response = $this->withHeaders([
-            'Authorization' => 'Bearer ' . $token,
         ])->post('/api/v1/tasks', [
-            'title' => 'Test Task',
-            'description' => 'This is a test task description.',
-            'total_pomodoro' => 2,
-            'pomodoro_value' => 25,
+            "title" => "Test Task",
+            "description" => "This is a test task description.",
+            "totalPomodori" => 48,
+            "pomodoroValue" => 60,
+            "taskDate" => "2025-08-17T22:47:13.121Z",
+            "dueDate" => "2025-08-17T22:47:13.121Z"
         ]);
 
         $response->assertStatus(201)
             ->assertJson([
-                'status' => true,
+                'success' => true,
                 'message' => 'Task created successfully',
             ]);
-
 
         $this->assertDatabaseHas('tasks', [
             'title' => 'Test Task',
             'description' => 'This is a test task description.',
+            'user_id' => $user->id,
         ]);
-
-
     });
 
     test('Create task without authentication', function () {
         $response = $this->post('/api/v1/tasks', [
             'title' => 'Test Task',
             'description' => 'This is a test task description.',
+            "totalPomodori" => 10,
+            "pomodoroValue" => 25,
+            "taskDate" => "2025-08-17T22:47:13.121Z",
+            "dueDate" => "2025-08-17T22:47:13.121Z"
         ]);
 
         $response->assertStatus(401)
@@ -56,7 +55,11 @@ describe('Create Task tests', function () {
         $response = $this->withHeaders([
             'Authorization' => 'Bearer ' . $token,
         ])->post('/api/v1/tasks', [
-            'description' => 'This is a test task description.',
+            "description" => "This is a test task description.",
+            "totalPomodori" => 10,
+            "pomodoroValue" => 25,
+            "taskDate" => "2025-08-17T22:47:13.121Z",
+            "dueDate" => "2025-08-17T22:47:13.121Z"
         ]);
 
         $response->assertStatus(422)
@@ -70,21 +73,22 @@ describe('Create Task tests', function () {
         $response = $this->withHeaders([
             'Authorization' => 'Bearer ' . $token,
         ])->post('/api/v1/tasks', [
-            'title' => 'Test Task',
-            'total_pomodoro' => 2,
-            'pomodoro_value' => 25,
+            "title" => "Test Task",
+            "totalPomodori" => 2,
+            "pomodoroValue" => 25,
+            "taskDate" => "2025-08-17T22:47:13.121Z",
+            "dueDate" => "2025-08-17T22:47:13.121Z"
         ]);
 
         $response->assertStatus(201)
-        ->assertJson([
-            'status' => true,
-            'message' => 'Task created successfully',
-        ]);
-
+            ->assertJson([
+                'success' => true,
+                'message' => 'Task created successfully',
+            ]);
 
         $this->assertDatabaseHas('tasks', [
             'title' => 'Test Task',
+            'user_id' => $user->id,
         ]);
     });
-
 });

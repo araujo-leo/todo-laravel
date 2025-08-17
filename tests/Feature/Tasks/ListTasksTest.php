@@ -3,16 +3,17 @@ use App\Models\Task;
 use App\Models\User;
 
 describe('List Tasks tests', function () {
-    test('List tasks working', function () {
+
+    test('List tasks successfully', function () {
         $user = User::factory()->create();
         $token = $user->createToken('TestToken')->plainTextToken;
 
         Task::factory()->create([
             'title' => 'Test Task',
             'description' => 'This is a test task description.',
-            'total_pomodoro' => 2,
-            'pomodoro_value' => 25,
-            'completed_pomodoro' => 0,
+            'totalPomodori' => 2,
+            'pomodoroValue' => 25,
+            'completedPomodori' => 0,
             'user_id' => $user->id,
         ]);
 
@@ -22,12 +23,19 @@ describe('List Tasks tests', function () {
 
         $response->assertStatus(200)
             ->assertJsonStructure([
-                'status',
+                'success',
                 'data' => [
                     '*' => [
                         'id',
                         'title',
                         'description',
+                        'totalPomodori',
+                        'pomodoroValue',
+                        'completedPomodori',
+                        'status',
+                        'taskDate',
+                        'dueDate',
+                        'assignedAt',
                     ],
                 ],
             ]);
@@ -52,12 +60,12 @@ describe('List Tasks tests', function () {
 
         $response->assertStatus(200)
             ->assertJson([
-                'status' => true,
+                'success' => true,
                 'data' => [],
             ]);
     });
 
-    test('List tasks with invalid token', closure: function () {
+    test('List tasks with invalid token', function () {
         $response = $this->withHeaders([
             'Authorization' => 'Bearer invalid_token',
         ])->get('/api/v1/tasks');
@@ -67,4 +75,5 @@ describe('List Tasks tests', function () {
                 'message' => 'Unauthenticated.',
             ]);
     });
+
 });

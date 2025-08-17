@@ -17,7 +17,11 @@ describe("Delete Task tests", function () {
             'Authorization' => 'Bearer ' . $token,
         ])->delete('/api/v1/tasks/' . $task->id);
 
-        $response->assertStatus(200);
+        $response->assertStatus(200)
+            ->assertJson([
+                'success' => true,
+                'message' => 'Task deleted successfully',
+            ]);
 
         assertSoftDeleted('tasks', [
             'id' => $task->id,
@@ -26,9 +30,13 @@ describe("Delete Task tests", function () {
 
     test("Delete Task Unauthorized", function () {
         $task = Task::factory()->create();
+
         $response = $this->delete('/api/v1/tasks/' . $task->id);
 
-        $response->assertStatus(401);
+        $response->assertStatus(401)
+            ->assertJson([
+                'message' => 'Unauthenticated.',
+            ]);
     });
 
     test("Delete Task Not Found", function () {
@@ -39,13 +47,17 @@ describe("Delete Task tests", function () {
             'Authorization' => 'Bearer ' . $token,
         ])->delete('/api/v1/tasks/9999');
 
-        $response->assertStatus(404);
+        $response->assertStatus(404)
+            ->assertJson([
+                'message' => 'Task not found',
+            ]);
     });
 
     test("Delete Task with invalid token", function () {
         $task = Task::factory()->create();
+
         $response = $this->withHeaders([
-            'Authorization' => 'Bearer ' . 'inactive_token',
+            'Authorization' => 'Bearer inactive_token',
         ])->delete('/api/v1/tasks/' . $task->id);
 
         $response->assertStatus(401)
@@ -54,7 +66,7 @@ describe("Delete Task tests", function () {
             ]);
     });
 
-    test("Delete Task twice" , function () {
+    test("Delete Task twice", function () {
         $user = User::factory()->create();
         $token = $user->createToken("TestToken")->plainTextToken;
 
@@ -66,12 +78,20 @@ describe("Delete Task tests", function () {
             'Authorization' => 'Bearer ' . $token,
         ])->delete('/api/v1/tasks/' . $task->id);
 
-        $response1->assertStatus(200);
+        $response1->assertStatus(200)
+            ->assertJson([
+                'success' => true,
+                'message' => 'Task deleted successfully',
+            ]);
 
         $response2 = $this->withHeaders([
             'Authorization' => 'Bearer ' . $token,
         ])->delete('/api/v1/tasks/' . $task->id);
 
-        $response2->assertStatus(404);
+        $response2->assertStatus(404)
+            ->assertJson([
+                'success' => false,
+                'message' => 'Task not found',
+            ]);
     });
 });
