@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateTaskRequest;
+use App\Http\Requests\PutTaskRequest;
 use App\Models\Task;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -37,9 +38,9 @@ class TaskController extends Controller
                 'title' => $validatedData['title'],
                 'description' => $validatedData['description'] ?? null,
                 'user_id' => auth()->id(),
-                'total_pomodoro' => $validatedData['total_pomodoro'],
-                'pomodoro_value' => $validatedData['pomodoro_value'],
-                'completed_pomodoro' => 0,
+                'totalPomodori' => $validatedData['totalPomodori'],
+                'pomodoroValue' => $validatedData['pomodoroValue'],
+                'completedPomodori' => $validatedData['completedPomodori'] ?? 0,
             ]);
             return response()->json([
                 'status' => true,
@@ -91,6 +92,41 @@ class TaskController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'Task deleted successfully',
+        ], Response::HTTP_OK);
+    }
+
+    public function update(PutTaskRequest $request, Task $task){
+
+        $validatedData = $request->validated();
+
+
+        // Verifica se pertence ao usuário
+        if ($task->user_id !== auth()->id()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Unauthorized',
+            ], Response::HTTP_UNAUTHORIZED);
+        }
+
+
+        $task->update($validatedData);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Task updated successfully',
+            'data' => [
+                'id' => $task->id,
+                'title' => $task->title,
+                'description' => $task->description,
+                'totalPomodori' => $task->total_pomodori,
+                'pomodoroValue' => $task->pomodoro_value,
+                'completedPomodori' => $task->completed_pomodori,
+                'status' => $task->status,
+                'taskdate' => $task->taskdate,
+                'dueDate' => $task->dueDate,
+                'completedAt' => $task->completed_pomodoro,
+            ],
+            'errrors' => $task->getErrors(),
         ], Response::HTTP_OK);
     }
 

@@ -16,12 +16,12 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('title', 50);
             $table->text('description')->nullable();
-            $table->integer('total_pomodoro')->nullable(false);
-            $table->integer('pomodoro_value')->nullable(false);
-            $table->integer('completed_pomodoro')->nullable(false)->default(0);
+            $table->integer('totalPomodori')->nullable(false);
+            $table->integer('pomodoroValue')->nullable(false);
+            $table->integer('completedPomodori')->nullable(false)->default(0);
             $table->enum('status', ['pending', 'in_progress', 'completed', 'cancelled'])->default('pending');
-            $table->dateTime('task_date')->nullable();
-            $table->dateTime('due_date')->nullable();
+            $table->dateTime('taskdate')->nullable();
+            $table->dateTime('dueDate')->nullable();
             $table->dateTime('assigned_at')->nullable();
             $table->dateTime('completed_at')->nullable();
             $table->timestamps();

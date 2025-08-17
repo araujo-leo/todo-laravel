@@ -1,18 +1,15 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers;
 
+use App\Http\Controllers\Api\Exception;
 use App\Http\Requests\LoginUserRequest;
+use App\Http\Requests\RegisterUserRequest;
 use App\Models\User;
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
-use App\Http\Requests\RegisterUserRequest;
-
 
 
 class UserController extends Controller
@@ -31,7 +28,7 @@ class UserController extends Controller
             return response()->json([
                 "status" => true,
                 "message" => "Usuário registrado com sucesso",
-                "data" => $user,
+                "data" => $user->only(['id', 'name', 'email'])
             ], Response::HTTP_CREATED);
 
         } catch (Exception $e) {
