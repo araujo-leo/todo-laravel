@@ -115,19 +115,25 @@ class TaskController extends Controller
         ], Response::HTTP_OK);
     }
 
-    public function update(PutTaskRequest $request, Task $task){
+    public function update(PutTaskRequest $request, $id){
 
+        $task = Task::find($id);
         $validatedData = $request->validated();
 
+        if(!$task) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Task not found',
+                'errors' => 'Task with the given ID does not exist.',
+            ], Response::HTTP_NOT_FOUND);
+        }
 
-        // Verifica se pertence ao usuário
         if ($task->user_id !== auth()->id()) {
             return response()->json([
                 'success' => false,
                 'message' => 'Unauthorized',
             ], Response::HTTP_UNAUTHORIZED);
         }
-
 
         $task->update($validatedData);
 
@@ -138,15 +144,14 @@ class TaskController extends Controller
                 'id' => $task->id,
                 'title' => $task->title,
                 'description' => $task->description,
-                'totalPomodori' => $task->total_pomodori,
+                'totalPomodori' => $task->totalPomodori,
                 'pomodoroValue' => $task->pomodoroValue,
-                'completedPomodori' => $task->completed_pomodori,
+                'completedPomodori' => $task->completedPomodori,
                 'status' => $task->status,
                 'taskdate' => $task->taskdate,
                 'dueDate' => $task->dueDate,
-                'completedAt' => $task->completedPomodori,
+                'completedAt' => $task->completed_at,
             ],
-            'errrors' => $task->getErrors(),
         ], Response::HTTP_OK);
     }
 
