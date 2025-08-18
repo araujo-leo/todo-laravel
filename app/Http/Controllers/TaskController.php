@@ -155,4 +155,50 @@ class TaskController extends Controller
         ], Response::HTTP_OK);
     }
 
+    public function patch(Request $request, $id)
+    {
+        $task = Task::find($id);
+
+        if (!$task) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Task not found',
+            ], Response::HTTP_NOT_FOUND);
+        }
+
+        if ($task->user_id !== auth()->id()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized',
+            ], Response::HTTP_UNAUTHORIZED);
+        }
+
+        $fillable = [
+            'title',
+            'description',
+            'totalPomodori',
+            'pomodoroValue',
+            'completedPomodori',
+            'status',
+            'taskDate',
+            'dueDate',
+        ];
+        $data = $request->only($fillable);
+
+        if (empty($data)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No valid fields provided for update',
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        $task->update($data);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Task updated successfully',
+            'data' => $task,
+        ], Response::HTTP_OK);
+    }
+
 }

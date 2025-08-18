@@ -20,5 +20,6 @@ Route::prefix('v1')->group(function () {
         Route::get('/{task}', [App\Http\Controllers\TaskController::class, 'show']);
         Route::delete('/{task}', [App\Http\Controllers\TaskController::class, 'destroy']);
         Route::put('/{task}', [App\Http\Controllers\TaskController::class, 'update']);
+        Route::patch('/{task}', [App\Http\Controllers\TaskController::class, 'patch']);
     });
 });
