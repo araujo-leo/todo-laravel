@@ -197,19 +197,7 @@ class TaskController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Task updated successfully',
-            'data' => [
-                'id' => $task->id,
-                'title' => $task->title,
-                'description' => $task->description,
-                'totalPomodori' => $task->totalPomodori,
-                'pomodoroValue' => $task->pomodoroValue,
-                'completedPomodori' => $task->completedPomodori,
-                'status' => $task->status,
-                'taskDate' => $task->taskDate,
-                'dueDate' => $task->dueDate,
-                'assignedAt' => $task->assigned_at,
-                'completedAt' => $task->completed_at,
-            ],
+            'data' => $task,
         ], Response::HTTP_OK);
     }
 
