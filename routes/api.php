@@ -1,9 +1,7 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\UserController;
-
 
 
 Route::prefix('v1')->group(function () {
@@ -21,5 +19,6 @@ Route::prefix('v1')->group(function () {
         Route::get('/', [App\Http\Controllers\TaskController::class, 'index']);
         Route::get('/{task}', [App\Http\Controllers\TaskController::class, 'show']);
         Route::delete('/{task}', [App\Http\Controllers\TaskController::class, 'destroy']);
+        Route::put('/{task}', [App\Http\Controllers\TaskController::class, 'update']);
     });
 });
