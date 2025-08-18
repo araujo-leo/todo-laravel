@@ -15,7 +15,7 @@ describe("Delete Task tests", function () {
 
         $response = $this->withHeaders([
             'Authorization' => 'Bearer ' . $token,
-        ])->delete('/api/v1/tasks/' . $task->id);
+        ])->delete(route('tasks.destroy', $task->id) );
 
         $response->assertStatus(200)
             ->assertJson([
@@ -31,7 +31,7 @@ describe("Delete Task tests", function () {
     test("Delete Task Unauthorized", function () {
         $task = Task::factory()->create();
 
-        $response = $this->delete('/api/v1/tasks/' . $task->id);
+        $response = $this->delete(route('tasks.destroy', $task->id) );
 
         $response->assertStatus(401)
             ->assertJson([
@@ -58,7 +58,7 @@ describe("Delete Task tests", function () {
 
         $response = $this->withHeaders([
             'Authorization' => 'Bearer inactive_token',
-        ])->delete('/api/v1/tasks/' . $task->id);
+        ])->delete(route('tasks.destroy', $task->id));
 
         $response->assertStatus(401)
             ->assertJson([
@@ -76,7 +76,7 @@ describe("Delete Task tests", function () {
 
         $response1 = $this->withHeaders([
             'Authorization' => 'Bearer ' . $token,
-        ])->delete('/api/v1/tasks/' . $task->id);
+        ])->delete(route('tasks.destroy', $task->id));
 
         $response1->assertStatus(200)
             ->assertJson([
@@ -86,7 +86,7 @@ describe("Delete Task tests", function () {
 
         $response2 = $this->withHeaders([
             'Authorization' => 'Bearer ' . $token,
-        ])->delete('/api/v1/tasks/' . $task->id);
+        ])->delete(route('tasks.destroy', $task->id));
 
         $response2->assertStatus(404)
             ->assertJson([
