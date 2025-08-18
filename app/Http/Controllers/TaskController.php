@@ -135,6 +135,25 @@ class TaskController extends Controller
             ], Response::HTTP_UNAUTHORIZED);
         }
 
+        $validFields = [
+            'title',
+            'description',
+            'totalPomodori',
+            'pomodoroValue',
+            'completedPomodori',
+            'status',
+            'taskDate',
+            'dueDate',
+        ];
+        $validatedFields = $request->only($validFields);
+
+        if(empty($validatedFields)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No valid fields provided for update',
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
         $task->update($validatedData);
         $task->save();
 

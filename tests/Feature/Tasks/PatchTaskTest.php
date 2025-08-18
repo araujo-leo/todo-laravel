@@ -23,6 +23,11 @@ describe('PatchTaskTest', function () {
                 'message' => 'Task updated successfully',
             ]);
 
+        $this->assertDatabaseHas('tasks', [
+            'id' => $task->id,
+            'description' => 'Descrição atualizada via PATCH',
+        ]);
+
         $task->refresh();
         $this->assertEquals('Descrição atualizada via PATCH', $task->description);
     });
@@ -58,6 +63,7 @@ describe('PatchTaskTest', function () {
     });
 
     test('tentar atualizar task sem campos válidos', function () {
+        $this->withoutExceptionHandling();
         $user = User::factory()->create();
         $token = $user->createToken('TestToken')->plainTextToken;
 

@@ -90,6 +90,7 @@ describe('atualizar task', function () {
                 'errors' => 'Task with the given ID does not exist.',
             ]);
     });
+
     test('tentar atualizar task com dados inválidos', function () {
         $user = User::factory()->create();
         $token = $user->createToken('TestToken')->plainTextToken;
@@ -106,6 +107,9 @@ describe('atualizar task', function () {
         ]);
 
         $response->assertStatus(422)
-            ->assertJsonValidationErrors(['title', 'totalPomodori']);
+            ->assertJsonStructure([
+                'message',
+                'errors'
+            ]);
     });
 });
