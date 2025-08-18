@@ -18,10 +18,10 @@ class PutTaskRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required|string|max:255',
+            'title' => 'nullable|string|max:255',
             'description' => 'nullable|string|max:1000',
-            'totalPomodori' => 'required|integer|min:1',
-            'pomodoroValue' => 'required|integer|min:1',
+            'totalPomodori' => 'nullable|integer|min:1',
+            'pomodoroValue' => 'nullable|integer|min:1',
             'completedPomodori' => 'nullable|integer|min:0',
             'taskdate' => 'nullable|date',
             'dueDate' => 'nullable|date',
@@ -32,14 +32,11 @@ class PutTaskRequest extends FormRequest
     public function messages()
     {
         return [
-            'title.required' => 'O título é obrigatório.',
             'title.string' => 'O título deve ser uma string.',
             'title.max' => 'O título pode ter no máximo 255 caracteres.',
             'description.string' => 'A descrição deve ser uma string.',
             'description.max' => 'A descrição pode ter no máximo 1000 caracteres.',
-            'totalPomodori.required' => 'O campo totalPomodori é obrigatório.',
             'totalPomodori.integer' => 'O campo totalPomodori deve ser um número inteiro.',
-            'pomodoroValue.required' => 'O campo pomodoroValue é obrigatório.',
             'pomodoroValue.integer' => 'O campo pomodoroValue deve ser um número inteiro.',
             'completedPomodori.integer' => 'O campo completedPomodori deve ser um número inteiro.',
             'taskdate.date' => 'A data da tarefa deve ser uma data válida.',
