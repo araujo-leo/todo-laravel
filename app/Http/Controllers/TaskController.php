@@ -30,7 +30,7 @@ class TaskController extends Controller
     }
 
 
-    public function create(CreateTaskRequest $request){
+    public function store(CreateTaskRequest $request){
         $validatedData = $request->validated();
 
         try {

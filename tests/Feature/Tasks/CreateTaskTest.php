@@ -10,7 +10,7 @@ describe('Create Task tests', function () {
 
         $response = $this->withHeaders([
             'Authorization' => 'Bearer ' . $token,
-        ])->post('/api/v1/tasks', [
+        ])->post(route('tasks.store'), [
             "title" => "Test Task",
             "description" => "This is a test task description.",
             "totalPomodori" => 48,
@@ -33,7 +33,7 @@ describe('Create Task tests', function () {
     });
 
     test('Create task without authentication', function () {
-        $response = $this->post('/api/v1/tasks', [
+        $response = $this->post(route('tasks.store'), [
             'title' => 'Test Task',
             'description' => 'This is a test task description.',
             "totalPomodori" => 10,
@@ -54,7 +54,7 @@ describe('Create Task tests', function () {
 
         $response = $this->withHeaders([
             'Authorization' => 'Bearer ' . $token,
-        ])->post('/api/v1/tasks', [
+        ])->post(route('tasks.store'), [
             "description" => "This is a test task description.",
             "totalPomodori" => 10,
             "pomodoroValue" => 25,
@@ -72,7 +72,7 @@ describe('Create Task tests', function () {
 
         $response = $this->withHeaders([
             'Authorization' => 'Bearer ' . $token,
-        ])->post('/api/v1/tasks', [
+        ])->post(route('tasks.store'), [
             "title" => "Test Task",
             "totalPomodori" => 2,
             "pomodoroValue" => 25,
