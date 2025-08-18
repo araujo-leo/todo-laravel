@@ -13,7 +13,7 @@ describe('PatchTaskTest', function () {
 
         $response = $this->withHeaders([
             'Authorization' => 'Bearer ' . $token,
-        ])->patch('/api/v1/tasks/' . $task->id, [
+        ])->patch(route('tasks.update', $task->id), [
             'description' => 'Descrição atualizada via PATCH',
         ]);
 
@@ -35,7 +35,7 @@ describe('PatchTaskTest', function () {
     test('tentar atualizar task sem autenticação', function () {
         $task = Task::factory()->create();
 
-        $response = $this->patch('/api/v1/tasks/' . $task->id, [
+        $response = $this->patch(route('tasks.update', $task->id), [
             'title' => 'Nova Tarefa',
         ]);
 
@@ -51,7 +51,7 @@ describe('PatchTaskTest', function () {
 
         $response = $this->withHeaders([
             'Authorization' => 'Bearer ' . $token,
-        ])->patch('/api/v1/tasks/9999', [
+        ])->patch(route('tasks.update', '9999'), [
             'title' => 'Tarefa Inexistente',
         ]);
 
@@ -73,7 +73,7 @@ describe('PatchTaskTest', function () {
 
         $response = $this->withHeaders([
             'Authorization' => 'Bearer ' . $token,
-        ])->patch('/api/v1/tasks/' . $task->id, [
+        ])->patch(route('tasks.update', $task->id), [
             'invalidField' => 'Não deve atualizar',
         ]);
 

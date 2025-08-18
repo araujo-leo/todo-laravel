@@ -13,7 +13,7 @@ describe('Get Task tests', function () {
 
         $response = $this->withHeaders([
             'Authorization' => 'Bearer ' . $token,
-        ])->get('/api/v1/tasks/' . $task->id);
+        ])->get(route('tasks.show', $task->id));
 
         $response->assertStatus(200)
             ->assertJson([
@@ -48,7 +48,7 @@ describe('Get Task tests', function () {
 
         $response = $this->withHeaders([
             'Authorization' => 'Bearer ' . $token,
-        ])->get('/api/v1/tasks/999999'); // ID que não existe
+        ])->get(route('tasks.show', '99999')); // ID que não existe
 
         $response->assertStatus(404)
             ->assertJson([
@@ -63,7 +63,7 @@ describe('Get Task tests', function () {
 
         $response = $this->withHeaders([
             'Authorization' => 'Bearer inactive_token',
-        ])->get('/api/v1/tasks/' . $task->id);
+        ])->get(route('tasks.show', $task->id));
 
         $response->assertStatus(401)
             ->assertJson([

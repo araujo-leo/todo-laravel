@@ -9,7 +9,7 @@ describe('atualizar task', function () {
 
         $response = $this->withHeaders([
             'Authorization' => 'Bearer ' . $token,
-        ])->post('/api/v1/tasks', [
+        ])->post(route('tasks.store'), [
             "title" => "Test Task",
             "description" => "This is a test task description.",
             "totalPomodori" => 48,
@@ -29,7 +29,7 @@ describe('atualizar task', function () {
 
         $response = $this->withHeaders([
             'Authorization' => 'Bearer ' . $token,
-        ])->put('/api/v1/tasks/'. $task['id'], [
+        ])->put(route('tasks.update', $task->id), [
             "title" => "Test Task updated",
             "description" => "This is a test task description updated.",
             "totalPomodori" => 48,
@@ -58,7 +58,7 @@ describe('atualizar task', function () {
     test('tentar atualizar task sem autenticação', function () {
         $task = Task::factory()->create();
 
-        $response = $this->put('/api/v1/tasks/' . $task->id, [
+        $response = $this->put(route('tasks.update', $task->id), [
             'title' => 'Tarefa Atualizada',
         ]);
 
@@ -101,7 +101,7 @@ describe('atualizar task', function () {
 
         $response = $this->withHeaders([
             'Authorization' => 'Bearer ' . $token,
-        ])->put('/api/v1/tasks/' . $task->id, [
+        ])->put(route('tasks.update', $task->id), [
             'title' => '',
             'totalPomodori' => -1,
         ]);

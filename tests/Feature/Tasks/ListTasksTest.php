@@ -19,7 +19,7 @@ describe('List Tasks tests', function () {
 
         $response = $this->withHeaders([
             'Authorization' => 'Bearer ' . $token,
-        ])->get('/api/v1/tasks');
+        ])->get(route('tasks.index'));
 
         $response->assertStatus(200)
             ->assertJsonStructure([
@@ -38,7 +38,7 @@ describe('List Tasks tests', function () {
     });
 
     test('List tasks without authentication', function () {
-        $response = $this->get('/api/v1/tasks');
+        $response = $this->get(route('tasks.index'));
 
         $response->assertStatus(401)
             ->assertJson([
@@ -52,7 +52,7 @@ describe('List Tasks tests', function () {
 
         $response = $this->withHeaders([
             'Authorization' => 'Bearer ' . $token,
-        ])->get('/api/v1/tasks');
+        ])->get(route('tasks.index'));
 
         $response->assertStatus(200)
             ->assertJson([
@@ -64,7 +64,7 @@ describe('List Tasks tests', function () {
     test('List tasks with invalid token', function () {
         $response = $this->withHeaders([
             'Authorization' => 'Bearer invalid_token',
-        ])->get('/api/v1/tasks');
+        ])->get(route('tasks.index'));
 
         $response->assertStatus(401)
             ->assertJson([
