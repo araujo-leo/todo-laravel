@@ -136,6 +136,7 @@ class TaskController extends Controller
         }
 
         $task->update($validatedData);
+        $task->save();
 
         return response()->json([
             'success' => true,
