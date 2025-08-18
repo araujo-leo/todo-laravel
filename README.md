@@ -6,7 +6,7 @@ API RESTful desenvolvida em **Laravel 12** para gerenciamento de tarefas, com au
 
 ## 🌐 Base URL
 ```
-http://localhost:1/api/v1
+http://localhost:8000/api/v1
 ```
 
 ## 🔑 Autenticação
