@@ -1,38 +1,33 @@
-# Dockerfile
+FROM php:8.3-cli
 
-# Use uma imagem base oficial do PHP 8.2 com FPM
-FROM php:8.2-fpm
-
-# Define o diretório de trabalho
-WORKDIR /var/www/html
-
-# Instala dependências do sistema necessárias para o Laravel
+# Dependências
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
-    zip \
     libpng-dev \
-    libjpeg62-turbo-dev \
-    libfreetype6-dev \
     libonig-dev \
     libxml2-dev \
-    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
+    libzip-dev \
+    zip \
+    curl \
+    && docker-php-ext-install pdo_mysql mbstring zip bcmath gd
 
-# Instala o Composer globalmente
+# Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Copia os arquivos da aplicação
+WORKDIR /var/www
+
+# Copia o projeto
 COPY . .
 
-# Instala as dependências do Composer
-RUN composer install --no-interaction --no-plugins --no-scripts --optimize-autoloader
+# Instala dependências
+RUN composer install --no-dev --optimize-autoloader
 
-# Ajusta permissões das pastas do Laravel
-RUN chown -R www-data:www-data storage bootstrap/cache
-RUN chmod -R 775 storage bootstrap/cache
+# Permissões
+RUN chown -R www-data:www-data /var/www \
+    && chmod -R 775 storage bootstrap/cache
 
-# Expõe a porta do PHP-FPM
 EXPOSE 9000
 
-# Comando para iniciar o PHP-FPM
-CMD ["php-fpm"]
+# Laravel server (simples e funciona bem atrás do Caddy)
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=9000"]
